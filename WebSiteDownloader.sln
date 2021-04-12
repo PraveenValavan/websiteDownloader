@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30611.23
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebSiteDownloader", "WebSiteDownloader\WebSiteDownloader.csproj", "{C77EEE42-D4E4-4E11-B210-E183DA0F7220}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C77EEE42-D4E4-4E11-B210-E183DA0F7220}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C77EEE42-D4E4-4E11-B210-E183DA0F7220}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C77EEE42-D4E4-4E11-B210-E183DA0F7220}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C77EEE42-D4E4-4E11-B210-E183DA0F7220}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3FBD4723-6D74-4DE5-8B36-E29FEF99327C}
+	EndGlobalSection
+EndGlobal
