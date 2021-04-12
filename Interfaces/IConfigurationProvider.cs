@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace WebSiteDownloader
+﻿namespace WebSiteDownloader
 {
     public interface IConfigurationProvider
     {

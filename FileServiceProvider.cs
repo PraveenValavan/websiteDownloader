@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
+﻿using System.IO;
 using System.Text.RegularExpressions;
 
 namespace WebSiteDownloader
@@ -33,7 +30,7 @@ namespace WebSiteDownloader
 
             CreateFolder(_configurationProvider.outputPath + subPath);
 
-            File.WriteAllText($"{_configurationProvider.outputPath}{subPath}//{(filename.Length > 0 ? filename : "index.html")}", HTMLPage);
+            File.WriteAllText($"{_configurationProvider.outputPath}{subPath}//{(filename.Length > 0 ? filename+".html" : "index.html")}", HTMLPage);
         }
     }
 }
