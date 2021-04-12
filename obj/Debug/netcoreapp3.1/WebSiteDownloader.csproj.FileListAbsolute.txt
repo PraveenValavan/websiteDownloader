@@ -13,6 +13,9 @@ E:\Documents\Projects\WebSiteDownloader\WebSiteDownloader\WebSiteDownloader\obj\
 E:\Documents\Projects\WebSiteDownloader\WebSiteDownloader\WebSiteDownloader\obj\Debug\netcoreapp3.1\WebSiteDownloader.csproj.CoreCompileInputs.cache
 E:\Documents\Projects\WebSiteDownloader\WebSiteDownloader\WebSiteDownloader\bin\Debug\netcoreapp3.1\SimpleInjector.dll
 E:\Documents\Projects\WebSiteDownloader\WebSiteDownloader\WebSiteDownloader\obj\Debug\netcoreapp3.1\WebSiteDownloader.csproj.CopyComplete
+E:\Documents\Work\projects\websiteDownloader\WebSiteDownloader\obj\Debug\netcoreapp3.1\WebSiteDownloader.AssemblyInfoInputs.cache
+E:\Documents\Work\projects\websiteDownloader\WebSiteDownloader\obj\Debug\netcoreapp3.1\WebSiteDownloader.AssemblyInfo.cs
+E:\Documents\Work\projects\websiteDownloader\WebSiteDownloader\obj\Debug\netcoreapp3.1\WebSiteDownloader.csproj.CoreCompileInputs.cache
 E:\Documents\Work\projects\websiteDownloader\WebSiteDownloader\bin\Debug\netcoreapp3.1\WebSiteDownloader.exe
 E:\Documents\Work\projects\websiteDownloader\WebSiteDownloader\bin\Debug\netcoreapp3.1\WebSiteDownloader.deps.json
 E:\Documents\Work\projects\websiteDownloader\WebSiteDownloader\bin\Debug\netcoreapp3.1\WebSiteDownloader.runtimeconfig.json
@@ -20,10 +23,6 @@ E:\Documents\Work\projects\websiteDownloader\WebSiteDownloader\bin\Debug\netcore
 E:\Documents\Work\projects\websiteDownloader\WebSiteDownloader\bin\Debug\netcoreapp3.1\WebSiteDownloader.dll
 E:\Documents\Work\projects\websiteDownloader\WebSiteDownloader\bin\Debug\netcoreapp3.1\WebSiteDownloader.pdb
 E:\Documents\Work\projects\websiteDownloader\WebSiteDownloader\bin\Debug\netcoreapp3.1\SimpleInjector.dll
-E:\Documents\Work\projects\websiteDownloader\WebSiteDownloader\obj\Debug\netcoreapp3.1\WebSiteDownloader.csprojAssemblyReference.cache
-E:\Documents\Work\projects\websiteDownloader\WebSiteDownloader\obj\Debug\netcoreapp3.1\WebSiteDownloader.AssemblyInfoInputs.cache
-E:\Documents\Work\projects\websiteDownloader\WebSiteDownloader\obj\Debug\netcoreapp3.1\WebSiteDownloader.AssemblyInfo.cs
-E:\Documents\Work\projects\websiteDownloader\WebSiteDownloader\obj\Debug\netcoreapp3.1\WebSiteDownloader.csproj.CoreCompileInputs.cache
 E:\Documents\Work\projects\websiteDownloader\WebSiteDownloader\obj\Debug\netcoreapp3.1\WebSiteDownloader.csproj.CopyComplete
 E:\Documents\Work\projects\websiteDownloader\WebSiteDownloader\obj\Debug\netcoreapp3.1\WebSiteDownloader.dll
 E:\Documents\Work\projects\websiteDownloader\WebSiteDownloader\obj\Debug\netcoreapp3.1\WebSiteDownloader.pdb
