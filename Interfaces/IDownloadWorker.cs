@@ -1,7 +1,9 @@
-﻿namespace WebSiteDownloader
+﻿using System.Threading.Tasks;
+
+namespace WebSiteDownloader
 {
     public interface IDownloadWorker
     {
-        public void BeginDownload();
+        public Task BeginDownload();
     }
 }
