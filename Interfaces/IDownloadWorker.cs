@@ -4,6 +4,6 @@ namespace WebSiteDownloader
 {
     public interface IDownloadWorker
     {
-        public Task BeginDownload();
+        public Task BeginDownloadAsync();
     }
 }

@@ -22,7 +22,7 @@ namespace WebSiteDownloader
 
             var service = ActivatorUtilities.CreateInstance<DownloadWorker>(host.Services);
 
-            service.BeginDownload();
+            await service.BeginDownloadAsync();
             Console.ReadLine();
         }
     }

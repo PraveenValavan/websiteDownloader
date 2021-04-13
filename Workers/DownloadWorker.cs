@@ -24,11 +24,9 @@ namespace WebSiteDownloader
             _pattern = configurationProvider.pattern;
         }
 
-        public async Task BeginDownload()
+        public async Task BeginDownloadAsync()
         {
             Console.WriteLine($"Begining Download");
-
-
 
             _fileServiceProvider.CheckAndCleanUpPreviousDownload();
 
@@ -42,13 +40,6 @@ namespace WebSiteDownloader
             Task.WhenAll(tasks).Await(OnComplete, ErrorHandler);
         }
 
-        private void OnComplete()
-        {
-            watch.Stop();
-            var elapsedMs = watch.ElapsedMilliseconds;
-            Console.WriteLine($"\nDownload complete in  { elapsedMs / 1000 } seconds");
-        }
-
         private async Task GetUrlsAsync(string pageUrl, IProgress<int> progress)
         {
             try
@@ -59,7 +50,7 @@ namespace WebSiteDownloader
 
                 foreach (Match match in listingMatches.ToList())
                 {
-                    if (FilterMathes(match))
+                    if (FilterMatches(match))
                         continue;
 
                     var subUrl = match.Groups[1].Value.ToString().Trim('/');
@@ -73,7 +64,7 @@ namespace WebSiteDownloader
                     tasks.Add(GetUrlsAsync(_url + subUrl, progress));
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw ex;
             }
@@ -99,7 +90,7 @@ namespace WebSiteDownloader
             return HTMLPage;
         }
 
-        private bool FilterMathes(Match match)
+        private bool FilterMatches(Match match)
         {
             try
             {
@@ -114,14 +105,20 @@ namespace WebSiteDownloader
             }
         }
 
-        private void ErrorHandler(Exception ex,Task task)
+        private void ErrorHandler(Exception ex, Task task)
         {
             throw ex;
+        }
+        private void OnComplete()
+        {
+            watch.Stop();
+            var elapsedMs = watch.ElapsedMilliseconds;
+            Console.WriteLine($"\nDownload complete in  { elapsedMs / 1000 } seconds");
         }
     }
     public static class TaskExtentions
     {
-        public async static void Await(this Task task, Action onComplete, Action<Exception,Task> errorHandler)
+        public async static void Await(this Task task, Action onComplete, Action<Exception, Task> errorHandler)
         {
             try
             {
