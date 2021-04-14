@@ -7,4 +7,5 @@ A tool to recursively download a website
 - .net Core
 - Taskextension
 - SOLID Prinicples
+- Serilog
 
