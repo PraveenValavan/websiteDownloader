@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -10,16 +11,18 @@ namespace WebSiteDownloader
     public class DownloadWorker : IDownloadWorker
     {
         private readonly IFileServiceProvider _fileServiceProvider;
+        private readonly ILogger<DownloadWorker> _logger;
         private readonly string _url;
         private readonly string _pattern;
 
-        private List<String> _list = new List<string>();
-        private List<Task> tasks = new List<Task>();
+        private List<string> _controlList = new List<string>();
+        private List<Task> _tasks = new List<Task>();
 
         System.Diagnostics.Stopwatch watch = System.Diagnostics.Stopwatch.StartNew();
-        public DownloadWorker(IFileServiceProvider fileServiceProvider, IConfigurationProvider configurationProvider)
+        public DownloadWorker(IFileServiceProvider fileServiceProvider, IConfigurationProvider configurationProvider, ILogger<DownloadWorker> logger)
         {
             _fileServiceProvider = fileServiceProvider;
+            _logger = logger;
             _url = configurationProvider.url;
             _pattern = configurationProvider.pattern;
         }
@@ -37,36 +40,30 @@ namespace WebSiteDownloader
 
             await GetUrlsAsync(_url, progress);
 
-            Task.WhenAll(tasks).Await(OnComplete, ErrorHandler);
+            Task.WhenAll(_tasks).Await(OnComplete, ErrorHandler);
         }
 
         private async Task GetUrlsAsync(string pageUrl, IProgress<int> progress)
         {
-            try
+
+            string page = await DownloadWebsiteAsync(pageUrl);
+
+            MatchCollection listingMatches = Regex.Matches(page, _pattern);
+
+            foreach (Match match in listingMatches.ToList())
             {
-                string page = await DownloadWebsiteAsync(pageUrl);
+                if (await FilterMatches(match))
+                    continue;
 
-                MatchCollection listingMatches = Regex.Matches(page, _pattern);
+                var subUrl = match.Groups[1].Value.ToString().Trim('/');
 
-                foreach (Match match in listingMatches.ToList())
-                {
-                    if (FilterMatches(match))
-                        continue;
+                _controlList.Add(subUrl);
 
-                    var subUrl = match.Groups[1].Value.ToString().Trim('/');
+                progress?.Report(_controlList.Count);
 
-                    _list.Add(subUrl);
+                _fileServiceProvider.saveHTML(subUrl, page);
 
-                    _fileServiceProvider.saveHTML(subUrl, page);
-
-                    progress?.Report(_list.Count);
-
-                    tasks.Add(GetUrlsAsync(_url + subUrl, progress));
-                }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
+                _tasks.Add(GetUrlsAsync(_url + subUrl, progress));
             }
         }
 
@@ -90,30 +87,34 @@ namespace WebSiteDownloader
             return HTMLPage;
         }
 
-        private bool FilterMatches(Match match)
+        private async Task<bool> FilterMatches(Match match)
         {
-            try
-            {
-                return match.Groups[1].ToString().Contains("http") || match.Groups[1].ToString().Contains("javascript:")
+            List<string> controlList = await GetListAsync();
+
+            bool isMatchDownloadedOrNotOkay = false;
+            isMatchDownloadedOrNotOkay = match.Groups[1].ToString().Contains("http") || match.Groups[1].ToString().Contains("javascript:")
                         || match.Groups[1].ToString().Contains("{") || match.Groups[1].ToString().Contains("mailto:")
-                        || match.Groups[1].ToString().Contains("#") || match.Groups[1].ToString().Contains("tel:")
-                        || _list.ToList().Where(existingUrl => existingUrl.Equals(match.Groups[1].ToString().Trim('/'))).Any();
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+                        || match.Groups[1].ToString().Contains("#") || match.Groups[1].ToString().Contains("tel:");
+
+            if (_controlList.Count > 0)
+                isMatchDownloadedOrNotOkay = isMatchDownloadedOrNotOkay || controlList.ToList().Where(existingUrl => existingUrl.Equals(match.Groups[1].ToString().Trim('/'))).Any();
+
+            return isMatchDownloadedOrNotOkay;
         }
 
         private void ErrorHandler(Exception ex, Task task)
         {
-            throw ex;
+            _logger.LogError("Exception : {ExceptionString} {Task}", ex.ToString(), task.ToString());
         }
         private void OnComplete()
         {
             watch.Stop();
             var elapsedMs = watch.ElapsedMilliseconds;
             Console.WriteLine($"\nDownload complete in  { elapsedMs / 1000 } seconds");
+        }
+        private Task<List<string>> GetListAsync()
+        {
+            return Task.Run(() => _controlList);
         }
     }
     public static class TaskExtentions

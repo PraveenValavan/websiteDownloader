@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Serilog;
 using System;
 using System.IO;
 using System.Threading.Tasks;
@@ -11,8 +12,19 @@ namespace WebSiteDownloader
     {
         static async Task Main(string[] args)
         {
+
+            ConfigurationBuilder configurationBuilder = new ConfigurationBuilder();
+
+            configurationBuilder.SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true).Build();
+
+            Log.Logger = new LoggerConfiguration()
+                .ReadFrom.Configuration(configurationBuilder.Build())
+                .CreateLogger();
+
             var host = Host.CreateDefaultBuilder()
-                            .ConfigureServices((context, services) =>
+                            .UseSerilog()
+                            .ConfigureServices((services) =>
                             {
                                 services.AddTransient<IDownloadWorker, DownloadWorker>();
                                 services.AddTransient<IFileServiceProvider, FileServiceProvider>();
@@ -20,9 +32,21 @@ namespace WebSiteDownloader
                             })
                            .Build();
 
-            var service = ActivatorUtilities.CreateInstance<DownloadWorker>(host.Services);
+            Log.Information("Starting {ApplicationName} ", System.Reflection.Assembly.GetExecutingAssembly().GetName().Name);
 
-            await service.BeginDownloadAsync();
+            try
+            {
+                var service = ActivatorUtilities.CreateInstance<DownloadWorker>(host.Services);
+                await service.BeginDownloadAsync();
+            }
+            catch (Exception ex)
+            {
+                Log.Fatal("\nException : {ExceptionString}", ex.ToString());
+            }
+            finally
+            {
+                Log.CloseAndFlush();
+            }
             Console.ReadLine();
         }
     }
