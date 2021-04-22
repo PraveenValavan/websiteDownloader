@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -14,9 +15,8 @@ namespace WebSiteDownloader
         private readonly ILogger<DownloadWorker> _logger;
         private readonly string _url;
         private readonly string _pattern;
-
-        private List<string> _controlList = new List<string>();
         private List<Task> _tasks = new List<Task>();
+        private ConcurrentBag<string> _controlList = new ConcurrentBag<string>();
 
         System.Diagnostics.Stopwatch watch = System.Diagnostics.Stopwatch.StartNew();
         public DownloadWorker(IFileServiceProvider fileServiceProvider, IConfigurationProvider configurationProvider, ILogger<DownloadWorker> logger)
@@ -42,7 +42,7 @@ namespace WebSiteDownloader
 
             Task.WhenAll(_tasks).Await(OnComplete, ErrorHandler);
         }
-
+        
         private async Task GetUrlsAsync(string pageUrl, IProgress<int> progress)
         {
 
@@ -52,7 +52,7 @@ namespace WebSiteDownloader
 
             foreach (Match match in listingMatches.ToList())
             {
-                if (await FilterMatches(match))
+                if (FilterMatches(match))
                     continue;
 
                 var subUrl = match.Groups[1].Value.ToString().Trim('/');
@@ -87,9 +87,8 @@ namespace WebSiteDownloader
             return HTMLPage;
         }
 
-        private async Task<bool> FilterMatches(Match match)
+        private bool FilterMatches(Match match)
         {
-            List<string> controlList = await GetListAsync();
 
             bool isMatchDownloadedOrNotOkay = false;
             isMatchDownloadedOrNotOkay = match.Groups[1].ToString().Contains("http") || match.Groups[1].ToString().Contains("javascript:")
@@ -97,7 +96,7 @@ namespace WebSiteDownloader
                         || match.Groups[1].ToString().Contains("#") || match.Groups[1].ToString().Contains("tel:");
 
             if (_controlList.Count > 0)
-                isMatchDownloadedOrNotOkay = isMatchDownloadedOrNotOkay || controlList.ToList().Where(existingUrl => existingUrl.Equals(match.Groups[1].ToString().Trim('/'))).Any();
+                isMatchDownloadedOrNotOkay = isMatchDownloadedOrNotOkay || _controlList.Where(existingUrl => existingUrl.Equals(match.Groups[1].ToString().Trim('/'))).Any();
 
             return isMatchDownloadedOrNotOkay;
         }
@@ -111,10 +110,6 @@ namespace WebSiteDownloader
             watch.Stop();
             var elapsedMs = watch.ElapsedMilliseconds;
             Console.WriteLine($"\nDownload complete in  { elapsedMs / 1000 } seconds");
-        }
-        private Task<List<string>> GetListAsync()
-        {
-            return Task.Run(() => _controlList);
         }
     }
     public static class TaskExtentions
